@@ -1,36 +1,39 @@
 import express from "express";
-import {createServer} from "node:http";
+import { createServer } from "node:http";
+
+import { Server } from "socket.io";
+
 import mongoose from "mongoose";
-import connectToSocket from "./controllers/socketManager.js";
-import cors from "cors"
-import usersRoutes from "./routes/usersRoutes.js";
-const app=express();
-const server=createServer(app);
-const io=connectToSocket(server);
+import { connectToSocket } from "./controllers/socketManager.js";
 
-const PORT = process.env.PORT || 5000;
+import cors from "cors";
+import userRoutes from "./routes/usersRoutes.js";
 
+const app = express();
+const server = createServer(app);
+const io = connectToSocket(server);
+
+
+app.set("port", (process.env.PORT || 8000))
 app.use(cors());
-app.use(express.json({limit:"40kb"}));
-app.use(express.urlencoded({limit:"40kb", extended:true}));
+app.use(express.json({ limit: "40kb" }));
+app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
-app.use("/api/v1/users",usersRoutes);
+app.use("/api/v1/users", userRoutes);
 
 const start = async () => {
-    try {
-        console.log("Connecting to MongoDB...");
-        const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/videocall";
-        const connectionDb = await mongoose.connect(mongoUri);
-        console.log(`MONGO Connected DB Host: ${connectionDb.connection.host}`);
-        console.log(`Database Name: ${connectionDb.connection.db.databaseName}`);
+    app.set("mongo_user")
+    const connectionDb = await mongoose.connect("mongodb://127.0.0.1:27017/videocall")
 
-        server.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
-    } catch (error) {
-        console.error("MongoDB connection failed:", error?.message || error);
-        process.exit(1);
-    }
-};
+    console.log(`MONGO Connected DB HOst: ${connectionDb.connection.host}`)
+    server.listen(app.get("port"), () => {
+        console.log("LISTENIN ON PORT 8000")
+    });
+
+
+
+}
+
+
 
 start();
