@@ -56,6 +56,8 @@ export default function VideoMeetComponent() {
 
     let [linkCopied, setLinkCopied] = useState(false);
 
+    let [expandedVideoId, setExpandedVideoId] = useState(null);
+
     const roomLink = window.location.href;
 
     const videoRef = useRef([])
@@ -459,6 +461,10 @@ export default function VideoMeetComponent() {
         }
     }
 
+    let toggleExpandVideo = (socketId) => {
+        setExpandedVideoId((current) => (current === socketId ? null : socketId));
+    }
+
 
     return (
         <div>
@@ -548,7 +554,10 @@ export default function VideoMeetComponent() {
 
                     <div className={styles.conferenceView}>
                         {videos.map((video) => (
-                            <div key={video.socketId}>
+                            <div
+                                key={video.socketId}
+                                className={`${styles.videoTile} ${expandedVideoId === video.socketId ? styles.videoTileExpanded : ""}`}
+                            >
                                 <video
 
                                     data-socket={video.socketId}
@@ -560,6 +569,12 @@ export default function VideoMeetComponent() {
                                     autoPlay
                                 >
                                 </video>
+                                <button
+                                    className={styles.expandButton}
+                                    onClick={() => toggleExpandVideo(video.socketId)}
+                                >
+                                    {expandedVideoId === video.socketId ? "Close" : "Expand"}
+                                </button>
                             </div>
 
                         ))}
