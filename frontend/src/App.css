@@ -6,7 +6,7 @@
 .landingPageContainer {
   width: 100vw;
   height: 100vh;
-  background: url("/back2.avif");
+  background: url("/background.png");
   background-repeat: no-repeat;
   background-size: cover;
   color: white;
@@ -56,6 +56,6 @@
 }
 
 .landingMainContainer > div:nth-child(2) img {
-  height: 40vh;
+  height: 60vh;
   width: auto;
 }

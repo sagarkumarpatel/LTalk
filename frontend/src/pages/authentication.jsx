@@ -3,14 +3,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthContext } from '../contexts/AuthContext';
 import { Snackbar } from '@mui/material';
@@ -25,9 +21,9 @@ export default function Authentication() {
 
     
 
-    const [username, setUsername] = React.useState();
-    const [password, setPassword] = React.useState();
-    const [name, setName] = React.useState();
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [name, setName] = React.useState("");
     const [error, setError] = React.useState();
     const [message, setMessage] = React.useState();
 
@@ -35,6 +31,13 @@ export default function Authentication() {
     const [formState, setFormState] = React.useState(0);
 
     const [open, setOpen] = React.useState(false)
+
+    const [backgroundUrl, setBackgroundUrl] = React.useState("");
+
+    React.useEffect(() => {
+        // Force a new image on each auth screen mount
+        setBackgroundUrl(`https://picsum.photos/1600/900?random=${Date.now()}`);
+    }, []);
 
 
     const { handleRegister, handleLogin } = React.useContext(AuthContext);
@@ -72,16 +75,17 @@ export default function Authentication() {
                 <CssBaseline />
                 <Grid
                     item
-                    xs={false}
+                    xs={12}
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+                        backgroundImage: backgroundUrl ? `url(${backgroundUrl})` : 'none',
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
+                        minHeight: { xs: 240, sm: 'auto' },
                     }}
                 />
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -101,10 +105,10 @@ export default function Authentication() {
 
                         <div>
                             <Button variant={formState === 0 ? "contained" : ""} onClick={() => { setFormState(0) }}>
-                                Sign In
+                                Login
                             </Button>
                             <Button variant={formState === 1 ? "contained" : ""} onClick={() => { setFormState(1) }}>
-                                Sign Up
+                                Register
                             </Button>
                         </div>
 
@@ -119,6 +123,7 @@ export default function Authentication() {
                                 value={name}
                                 autoFocus
                                 onChange={(e) => setName(e.target.value)}
+                                className="authField"
                             /> : <></>}
 
                             <TextField
@@ -131,7 +136,6 @@ export default function Authentication() {
                                 value={username}
                                 autoFocus
                                 onChange={(e) => setUsername(e.target.value)}
-
                             />
                             <TextField
                                 margin="normal"
@@ -142,7 +146,6 @@ export default function Authentication() {
                                 value={password}
                                 type="password"
                                 onChange={(e) => setPassword(e.target.value)}
-
                                 id="password"
                             />
 
@@ -157,7 +160,6 @@ export default function Authentication() {
                             >
                                 {formState === 0 ? "Login " : "Register"}
                             </Button>
-
                         </Box>
                     </Box>
                 </Grid>
