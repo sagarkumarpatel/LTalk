@@ -54,6 +54,10 @@ export default function VideoMeetComponent() {
 
     let [username, setUsername] = useState("");
 
+    let [linkCopied, setLinkCopied] = useState(false);
+
+    const roomLink = window.location.href;
+
     const videoRef = useRef([])
 
     let [videos, setVideos] = useState([])
@@ -445,6 +449,16 @@ export default function VideoMeetComponent() {
         getMedia();
     }
 
+    let copyInviteLink = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            setLinkCopied(true);
+            setTimeout(() => setLinkCopied(false), 2000);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
 
     return (
         <div>
@@ -457,6 +471,13 @@ export default function VideoMeetComponent() {
                     <h2>Enter into Lobby </h2>
                     <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
                     <Button variant="contained" onClick={connect}>Connect</Button>
+                    <Button variant="outlined" onClick={copyInviteLink} style={{ marginLeft: "10px" }}>
+                        {linkCopied ? "Link Copied" : "Copy Invite Link"}
+                    </Button>
+                    <div className={styles.inviteRow}>
+                        <span>Invite link:</span>
+                        <span className={styles.inviteLink}>{roomLink}</span>
+                    </div>
 
 
                     <div>

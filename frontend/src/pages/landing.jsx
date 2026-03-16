@@ -7,6 +7,11 @@ export default function LandingPage() {
 
     const router = useNavigate();
 
+    const createMeeting = () => {
+        const code = Math.random().toString(36).slice(2, 10);
+        router(`/${code}`);
+    };
+
     return (
         <div className='landingPageContainer'>
             <nav>
@@ -37,8 +42,13 @@ export default function LandingPage() {
 
                     <p>Meet face to face, share moments, and stay close
                         no matter where you are.</p>
-                    <div role='button'>
-                        <Link to={"/auth"}>Get Started</Link>
+                    <div className="landingActions">
+                        <div role='button'>
+                            <Link to={"/auth"}>Get Started</Link>
+                        </div>
+                        <div role='button' onClick={createMeeting}>
+                            <p>New Meeting</p>
+                        </div>
                     </div>
                 </div>
                 <div>

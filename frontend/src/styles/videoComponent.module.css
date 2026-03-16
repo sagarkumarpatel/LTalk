@@ -57,3 +57,17 @@
   position: absolute;
   bottom: 0;
 }
+
+.inviteRow {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: white;
+}
+
+.inviteLink {
+  font-size: 0.9rem;
+  word-break: break-all;
+  opacity: 0.9;
+}
