@@ -22,16 +22,18 @@ app.use(express.urlencoded({ limit: "40kb", extended: true }));
 app.use("/api/v1/users", userRoutes);
 
 const start = async () => {
-    app.set("mongo_user")
-    const connectionDb = await mongoose.connect("mongodb://127.0.0.1:27017/videocall")
+    const mongoUrl = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/videocall";
 
-    console.log(`MONGO Connected DB HOst: ${connectionDb.connection.host}`)
+    if (!process.env.MONGODB_URI) {
+        console.warn("MONGODB_URI not set; falling back to local MongoDB.");
+    }
+
+    const connectionDb = await mongoose.connect(mongoUrl);
+
+    console.log(`MONGO Connected DB HOst: ${connectionDb.connection.host}`);
     server.listen(app.get("port"), () => {
-        console.log("LISTENIN ON PORT 8000")
+        console.log("LISTENIN ON PORT 8000");
     });
-
-
-
 }
 
 
