@@ -74,8 +74,7 @@ export default function VideoMeetComponent() {
     useEffect(() => {
         console.log("HELLO")
         getPermissions();
-
-    })
+    }, [])
 
     let getDislayMedia = () => {
         if (screen) {
@@ -388,12 +387,24 @@ export default function VideoMeetComponent() {
     }
 
     let handleVideo = () => {
-        setVideo(!video);
-        // getUserMedia();
+        const nextVideo = !video;
+        setVideo(nextVideo);
+
+        if (window.localStream) {
+            window.localStream.getVideoTracks().forEach((track) => {
+                track.enabled = nextVideo;
+            });
+        }
     }
     let handleAudio = () => {
-        setAudio(!audio)
-        // getUserMedia();
+        const nextAudio = !audio;
+        setAudio(nextAudio);
+
+        if (window.localStream) {
+            window.localStream.getAudioTracks().forEach((track) => {
+                track.enabled = nextAudio;
+            });
+        }
     }
 
     useEffect(() => {
