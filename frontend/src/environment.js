@@ -1,8 +1,3 @@
-let IS_PROD = true;
-const server = IS_PROD ?
-    "https://ltalkbackend.onrender.com" :
-
-    "http://localhost:8000"
-
+const server = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default server;
