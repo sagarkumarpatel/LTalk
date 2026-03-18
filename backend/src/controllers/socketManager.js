@@ -4,6 +4,8 @@ import { Server } from "socket.io"
 let connections = {}
 let messages = {}
 let timeOnline = {}
+let roomUsers = {}
+let roomMediaStates = {}
 
 export const connectToSocket = (server) => {
     const io = new Server(server, {
@@ -20,12 +22,24 @@ export const connectToSocket = (server) => {
 
         console.log("SOMETHING CONNECTED")
 
-        socket.on("join-call", (path) => {
+        socket.on("join-call", (path, username) => {
 
             if (connections[path] === undefined) {
                 connections[path] = []
             }
             connections[path].push(socket.id)
+
+            if (roomUsers[path] === undefined) {
+                roomUsers[path] = {}
+            }
+            roomUsers[path][socket.id] = username || "Guest"
+
+            if (roomMediaStates[path] === undefined) {
+                roomMediaStates[path] = {}
+            }
+            if (roomMediaStates[path][socket.id] === undefined) {
+                roomMediaStates[path][socket.id] = { video: true, audio: true }
+            }
 
             timeOnline[socket.id] = new Date();
 
@@ -34,7 +48,7 @@ export const connectToSocket = (server) => {
             // })
 
             for (let a = 0; a < connections[path].length; a++) {
-                io.to(connections[path][a]).emit("user-joined", socket.id, connections[path])
+                io.to(connections[path][a]).emit("user-joined", socket.id, connections[path], roomUsers[path], roomMediaStates[path])
             }
 
             if (messages[path] !== undefined) {
@@ -79,6 +93,30 @@ export const connectToSocket = (server) => {
 
         })
 
+        socket.on("media-state", (state) => {
+            const [matchingRoom, found] = Object.entries(connections)
+                .reduce(([room, isFound], [roomKey, roomValue]) => {
+                    if (!isFound && roomValue.includes(socket.id)) {
+                        return [roomKey, true];
+                    }
+                    return [room, isFound];
+                }, ["", false]);
+
+            if (found === true) {
+                if (roomMediaStates[matchingRoom] === undefined) {
+                    roomMediaStates[matchingRoom] = {}
+                }
+                roomMediaStates[matchingRoom][socket.id] = {
+                    video: !!state?.video,
+                    audio: !!state?.audio
+                };
+
+                connections[matchingRoom].forEach((elem) => {
+                    io.to(elem).emit("media-state", socket.id, roomMediaStates[matchingRoom][socket.id]);
+                })
+            }
+        })
+
         socket.on("disconnect", () => {
 
             var diffTime = Math.abs(timeOnline[socket.id] - new Date())
@@ -102,6 +140,13 @@ export const connectToSocket = (server) => {
 
                         if (connections[key].length === 0) {
                             delete connections[key]
+                            delete roomUsers[key]
+                            delete roomMediaStates[key]
+                        } else if (roomUsers[key] !== undefined) {
+                            delete roomUsers[key][socket.id]
+                            if (roomMediaStates[key] !== undefined) {
+                                delete roomMediaStates[key][socket.id]
+                            }
                         }
                     }
                 }
