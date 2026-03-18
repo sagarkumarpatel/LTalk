@@ -10,6 +10,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   color: white;
+  overflow-x: hidden;
 }
 
 .landingPageContainer nav {
@@ -18,6 +19,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .landingPageContainer nav h2 {
@@ -29,6 +32,7 @@
   display: flex;
   gap: 1.6rem;
   cursor: pointer;
+  flex-wrap: wrap;
 }
 .landingMainContainer {
   display: flex;
@@ -36,10 +40,12 @@
   padding-inline: 3rem;
   height: 70vh;
   align-items: center;
+  gap: 2rem;
 }
 
 .landingMainContainer > div:nth-child(1) {
   font-size: 2.2rem;
+  max-width: 640px;
 }
 
 .landingMainContainer > div:nth-child(1) div[role="button"] {
@@ -69,4 +75,95 @@
 .landingMainContainer > div:nth-child(2) img {
   height: 60vh;
   width: auto;
+}
+
+@media (max-width: 1024px) {
+  .landingMainContainer {
+    padding-inline: 2rem;
+    height: auto;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    font-size: 1.8rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) img {
+    height: 45vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .landingPageContainer {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .landingPageContainer nav {
+    padding-inline: 1rem;
+    padding-block: 1.2rem;
+  }
+
+  .landingPageContainer nav h2 {
+    font-size: 1.5rem;
+  }
+
+  .landingPageContainer nav .navList {
+    gap: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .landingMainContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-inline: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    font-size: 1.6rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) div[role="button"] {
+    padding: 0.85rem 1.1rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) div[role="button"] a,
+  .landingMainContainer
+    > div:nth-child(1)
+    .landingActions
+    div[role="button"]
+    p {
+    font-size: 1.1rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .landingMainContainer > div:nth-child(2) img {
+    height: auto;
+    width: min(320px, 85vw);
+  }
+}
+
+@media (max-width: 480px) {
+  .landingPageContainer nav {
+    align-items: flex-start;
+  }
+
+  .landingPageContainer nav .navList {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .landingMainContainer {
+    padding-inline: 1.1rem;
+    gap: 1.5rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    font-size: 1.35rem;
+  }
 }
